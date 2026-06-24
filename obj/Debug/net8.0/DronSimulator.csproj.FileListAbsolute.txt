@@ -24,3 +24,4 @@ C:\Users\NEW GAME\DronSimulator\obj\Debug\net8.0\refint\DronSimulator.dll
 C:\Users\NEW GAME\DronSimulator\obj\Debug\net8.0\DronSimulator.pdb
 C:\Users\NEW GAME\DronSimulator\obj\Debug\net8.0\DronSimulator.genruntimeconfig.cache
 C:\Users\NEW GAME\DronSimulator\obj\Debug\net8.0\ref\DronSimulator.dll
+C:\Users\NEW GAME\DronSimulator\obj\Debug\net8.0\DronSimulator.sourcelink.json

@@ -11,9 +11,19 @@ namespace DronSimulator.Services
             (2, 1), (2, -1), (-2, 1), (-2, -1),
             (1, 2), (1, -2), (-1, 2), (-1, -2)
         };
+        
+        private int _attempts = 0;
+        private DateTime _startTime;
+        private bool _showProgress = true;
 
         public SimulationResult Simulate(int n, int startX, int startY)
         {
+            _attempts = 0;
+            _startTime = DateTime.Now;
+            
+            Console.WriteLine($"⏳ Simulando N={n}, inicio=({startX},{startY})...");
+            Console.WriteLine("   (el programa puede tardar varios segundos)");
+            
             var result = new SimulationResult
             {
                 N = n,
@@ -39,6 +49,13 @@ namespace DronSimulator.Services
                 result.IsSuccess = true;
                 result.Board = board;
                 result.Movements = ExtractMovements(board, n);
+                
+                var elapsed = DateTime.Now - _startTime;
+                Console.WriteLine($"✅ Simulación completada en {elapsed.TotalSeconds:F1}s, {_attempts:N0} intentos");
+            }
+            else
+            {
+                Console.WriteLine("❌ No se encontró solución.");
             }
 
             return result;
@@ -46,6 +63,27 @@ namespace DronSimulator.Services
 
         private bool Explore(int[,] board, int n, int currentX, int currentY, int step, int targetSteps)
         {
+            _attempts++;
+            
+            if (_showProgress && _attempts % 100000 == 0)
+            {
+                var elapsed = DateTime.Now - _startTime;
+                Console.WriteLine($"⏳ Intentos: {_attempts:N0}, Paso: {step}/{targetSteps}, Tiempo: {elapsed.TotalSeconds:F1}s");
+            }
+            
+            if (_showProgress && (DateTime.Now - _startTime).TotalSeconds > 30 && _attempts % 10000 == 0)
+            {
+                Console.WriteLine($"⚠️ La simulación lleva {((DateTime.Now - _startTime).TotalSeconds):F0} segundos...");
+                Console.WriteLine($"   Intentos: {_attempts:N0}, puede tardar varios minutos");
+            }
+            
+            // Timeout a los 5 minutos
+            if ((DateTime.Now - _startTime).TotalSeconds > 300)
+            {
+                Console.WriteLine("❌ Tiempo de simulación excedido (5 minutos). Cancelando...");
+                return false;
+            }
+            
             if (step == targetSteps)
                 return true;
 
